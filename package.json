@@ -1,0 +1,66 @@
+{
+  "name": "amdgpu-isa-support",
+  "displayName": "AMDGPU ISA Language Support",
+  "description": "Syntax highlighting, ISA instruction hover documentation, and go-to-definition for AMD GCN/CDNA/RDNA assembly (.s, .S, .gcn).",
+  "version": "0.1.0",
+  "publisher": "amd-gcn-isa",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "amdgpu",
+    "gcn",
+    "cdna",
+    "rdna",
+    "rocm",
+    "assembly",
+    "isa",
+    "gfx"
+  ],
+  "activationEvents": [
+    "onLanguage:gcn-asm"
+  ],
+  "main": "./out/src/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "gcn-asm",
+        "aliases": [
+          "AMD GCN/CDNA/RDNA Assembly",
+          "AMDGPU Assembly",
+          "GCN Assembly"
+        ],
+        "extensions": [
+          ".s",
+          ".S",
+          ".gcn"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "gcn-asm",
+        "scopeName": "source.gcn-asm",
+        "path": "./syntaxes/gcn-asm.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node --test out/test",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/vscode": "^1.85.0",
+    "fast-xml-parser": "^4.5.0",
+    "typescript": "^5.5.4"
+  }
+}

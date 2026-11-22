@@ -1,0 +1,224 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "AMD GCN/CDNA/RDNA Assembly",
+  "scopeName": "source.gcn-asm",
+  "fileTypes": [
+    "s",
+    "S",
+    "gcn"
+  ],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#preprocessor"
+    },
+    {
+      "include": "#labels"
+    },
+    {
+      "include": "#directives"
+    },
+    {
+      "include": "#instructions"
+    },
+    {
+      "include": "#modifiers"
+    },
+    {
+      "include": "#registers"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#operators"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.gcn-asm",
+          "begin": "/\\*",
+          "end": "\\*/"
+        },
+        {
+          "name": "comment.line.double-slash.gcn-asm",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.line.semicolon.gcn-asm",
+          "match": ";.*$"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.gcn-asm",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.gcn-asm",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.gcn-asm",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.gcn-asm",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "preprocessor": {
+      "patterns": [
+        {
+          "name": "meta.preprocessor.gcn-asm",
+          "match": "^\\s*(#\\s*(?:define|undef|include|if|ifdef|ifndef|elif|else|endif|pragma|error|warning))\\b",
+          "captures": {
+            "1": {
+              "name": "keyword.control.directive.preprocessor.gcn-asm"
+            }
+          }
+        }
+      ]
+    },
+    "labels": {
+      "patterns": [
+        {
+          "name": "entity.name.label.gcn-asm",
+          "match": "^\\s*([A-Za-z_.$][A-Za-z0-9_.$]*|\\d+)(:)",
+          "captures": {
+            "1": {
+              "name": "entity.name.label.gcn-asm"
+            },
+            "2": {
+              "name": "punctuation.separator.label.gcn-asm"
+            }
+          }
+        }
+      ]
+    },
+    "directives": {
+      "patterns": [
+        {
+          "name": "keyword.control.directive.gcn-asm",
+          "match": "(?<![A-Za-z0-9_.$])\\.(?:text|data|rodata|bss|section|globl|global|local|weak|hidden|protected|internal|set|equ|equiv|eqv|amdhsa_kernel|end_amdhsa_kernel|amdhsa_[A-Za-z0-9_]+|amdgcn_target|amdgpu_metadata|end_amdgpu_metadata|amdgpu_hsa_kernel|amdgpu_hsa_metadata|end_amdgpu_hsa_metadata|hsa_code_object_version|hsa_code_object_isa|macro|endm|exitm|purgem|if|ifdef|ifndef|ifb|ifnb|ifeq|ifne|ifgt|ifge|iflt|ifle|elseif|else|endif|rept|irp|irpc|endr|p2align|balign|align|type|size|byte|2byte|4byte|8byte|short|hword|word|int|long|quad|float|double|ascii|asciz|string|space|skip|zero|fill|include|incbin|altmacro|noaltmacro|ident|file|loc|cfi_[A-Za-z0-9_]+|error|warning|print)(?![A-Za-z0-9_.$])"
+        }
+      ]
+    },
+    "instructions": {
+      "patterns": [
+        {
+          "name": "keyword.control.instruction.gcn-asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])(?:s_(?:wa(?:it(?:_(?:s(?:torecnt(?:_dscnt)?|amplecnt)|loadcnt(?:_dscnt)?|a(?:synccnt|lu)|e(?:xpcnt|vent)|tensorcnt|bvhcnt|dscnt|kmcnt|idle|xcnt)|cnt(?:_(?:v(?:mcnt|scnt)|lgkmcnt|depctr|expcnt))?)|keup_barrier)|s(?:et(?:_(?:inst_prefetch_distance|vgpr_msb|pc_i64)|p(?:rio(?:_inc_wg)?|c_b64)|vskip|halt|kill)|ubvector_loop_(?:begin|end)|wap(?:_pc_i64|pc_b64)|leep)|c(?:branch_(?:cdbg(?:sys(?:_(?:and_user|or_user))?|user)|exec(?:nz|z)|vcc(?:nz|z)|scc(?:0|1)|g_fork|i_fork|join)|all_(?:b64|i64)|ode_end|lause)|endpgm(?:_(?:ordered_ps_done|saved))?|b(?:arrier_(?:join|wait)|ranch)|rfe_(?:restore_b64|b64|i64)|t(?:tracedata_imm|rap)|inst_prefetch|monitor_sleep|add_pc_i64|delay_alu|version|nop))(?:_(?:e32|e64|dpp|sdwa))?(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "support.function.matrix.instruction.gcn-asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])(?:v_(?:mfma_(?:f(?:32_(?:16x16x(?:32(?:_(?:bf(?:8_(?:bf8|fp8)|16)|f(?:p8_(?:bf8|fp8)|16))|bf8(?:bf8|fp8)|fp8(?:bf8|fp8))|1(?:6(?:_(?:bf16|f16)|bf16(?:_1k)?|f16)|28_f8f6f4|_4b_f32|f32)|4(?:_(?:4b_(?:bf16|f16)|f32)|bf16(?:_1k)?|f(?:16|32))|8(?:_xf32|bf16|xf32)|2bf16)|32x32x(?:1(?:6(?:_(?:bf(?:8_(?:bf8|fp8)|16)|f(?:p8_(?:bf8|fp8)|16))|bf8(?:bf8|fp8)|fp8(?:bf8|fp8))|_2b_f32|f32)|4(?:_(?:2b_(?:bf16|f16)|xf32)|bf16(?:_1k)?|xf32|f16)|8(?:_(?:bf16|f16)|bf16(?:_1k)?|f16)|2(?:_f32|bf16|f32)|64_f8f6f4)|4x4x(?:4(?:_16b_(?:bf16|f16)|bf16(?:_1k)?|f16)|1(?:_16b_f32|f32)|2bf16))|64_(?:4x4x4(?:_4b_f64|f64)|16x16x4(?:_f64|f64)))|i32_(?:16x16x(?:4(?:_4b_i8|i8)|32(?:_i8|i8)|64_i8|16i8)|32x32x(?:4(?:_2b_i8|i8)|16(?:_i8|i8)|32_i8|8i8)|4x4x4(?:_16b_i8|i8))|scale_f32_(?:16x16x128_f8f6f4|32x32x64_f8f6f4))|s(?:mfmac_(?:f32_(?:16x16x(?:64(?:_(?:bf(?:8_(?:bf8|fp8)|16)|f(?:p8_(?:bf8|fp8)|16))|bf8(?:bf8|fp8)|fp8(?:bf8|fp8))|128_(?:bf8_(?:bf8|fp8)|fp8_(?:bf8|fp8))|32(?:_(?:bf16|f16)|bf16|f16))|32x32x(?:32(?:_(?:bf(?:8_(?:bf8|fp8)|16)|f(?:p8_(?:bf8|fp8)|16))|bf8(?:bf8|fp8)|fp8(?:bf8|fp8))|64_(?:bf8_(?:bf8|fp8)|fp8_(?:bf8|fp8))|16(?:_(?:bf16|f16)|bf16|f16)))|i32_(?:16x16x(?:64(?:_i8|i8)|128_i8)|32x32x(?:32(?:_i8|i8)|64_i8)))|wmmac_(?:f(?:32_16x16x(?:32_(?:bf(?:8_(?:bf8|fp8)|16)|f(?:p8_(?:bf8|fp8)|16))|128_(?:bf8_(?:bf8|fp8)|fp8_(?:bf8|fp8))|64_(?:bf16|f16))|16_16x16x(?:128_(?:bf8_(?:bf8|fp8)|fp8_(?:bf8|fp8))|32_f16|64_f16))|bf16(?:_16x16x(?:32_bf16|64_bf16)|f32_16x16x64_bf16)|i32_16x16x(?:32_iu(?:4|8)|128_iu8|64_iu4)))|wmma_(?:f(?:32_(?:16x16x(?:1(?:6_(?:bf(?:8_(?:bf8|fp8)|16)|f(?:p8_(?:bf8|fp8)|16))|28_(?:f(?:p8_(?:bf8|fp8)|8f6f4)|bf8_(?:bf8|fp8)))|64_(?:bf8_(?:bf8|fp8)|fp8_(?:bf8|fp8))|32_(?:bf16|f16)|4_f32)|32x16x128_f4)|16_16x16x(?:1(?:28_(?:bf8_(?:bf8|fp8)|fp8_(?:bf8|fp8))|6_f16)|64_(?:bf8_(?:bf8|fp8)|fp8_(?:bf8|fp8))|32_f16))|scale(?:16_f32_(?:16x16x128_f8f6f4|32x16x128_f4)|_f32_(?:16x16x128_f8f6f4|32x16x128_f4))|bf16(?:_16x16x(?:16_bf16|32_bf16)|f32_16x16x32_bf16)|i32_16x16x(?:16_iu(?:4|8)|32_iu4|64_iu8))))(?:_(?:e32|e64|dpp|sdwa))?(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "entity.name.function.memory.instruction.gcn-asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])(?:(?:ds_(?:s(?:tore(?:_(?:b(?:1(?:6(?:_d16_hi)?|28)|8(?:_d16_hi)?|32|64|96)|2addr_(?:stride64_b(?:32|64)|b(?:32|64))|addtid_b32)|xchg_(?:2addr_(?:stride64_rtn_b(?:32|64)|rtn_b(?:32|64))|rtn_b(?:32|64)))|ub(?:_(?:clamp_(?:rtn_u32|u32)|rtn_u(?:32|64)|gs_reg_rtn|u(?:32|64))|rev_(?:rtn_u(?:32|64)|u(?:32|64)))|wizzle_b32)|m(?:ax_(?:rtn_(?:f(?:32|64)|i(?:32|64)|u(?:32|64))|num_(?:rtn_f(?:32|64)|f(?:32|64))|f(?:32|64)|i(?:32|64)|u(?:32|64))|in_(?:rtn_(?:f(?:32|64)|i(?:32|64)|u(?:32|64))|num_(?:rtn_f(?:32|64)|f(?:32|64))|f(?:32|64)|i(?:32|64)|u(?:32|64))|skor_(?:rtn_b(?:32|64)|b(?:32|64)))|load_(?:b(?:128(?:_tr_b(?:16|6))?|64(?:_tr_b(?:4|8))?|32|96)|tr(?:_b(?:128|64)|16_b128|4_b64|6_b96|8_b64)|u(?:16(?:_d16(?:_hi)?)?|8(?:_d16(?:_hi)?)?)|2addr_(?:stride64_b(?:32|64)|b(?:32|64))|i(?:8(?:_d16(?:_hi)?)?|16)|addtid_b32)|r(?:ead(?:_(?:b(?:64(?:_tr_b(?:16|4|8))?|128(?:_tr_b6)?|96(?:_tr_b6)?|32)|u(?:16(?:_d16(?:_hi)?)?|8(?:_d16(?:_hi)?)?)|i(?:8(?:_d16(?:_hi)?)?|16)|addtid_b32)|2(?:st64_b(?:32|64)|_b(?:32|64)))|sub_(?:rtn_u(?:32|64)|u(?:32|64)))|wr(?:ite(?:_(?:b(?:1(?:6(?:_d16_hi)?|28)|8(?:_d16_hi)?|32|64|96)|addtid_b32)|2(?:st64_b(?:32|64)|_b(?:32|64)))|xchg(?:2(?:st64_rtn_b(?:32|64)|_rtn_b(?:32|64))|_rtn_b(?:32|64))|ap_rtn_b32)|c(?:mpst(?:ore_(?:rtn_(?:b(?:32|64)|f(?:32|64))|b(?:32|64)|f(?:32|64))|_(?:rtn_(?:b(?:32|64)|f(?:32|64))|b(?:32|64)|f(?:32|64)))|on(?:d(?:_sub_(?:rtn_u32|u32)|xchg32_rtn_b64)|sume))|a(?:dd_(?:rtn_(?:f(?:32|64)|u(?:32|64))|f(?:32|64)|gs_reg_rtn|u(?:32|64))|tomic_(?:async_barrier_arrive_b64|barrier_arrive_rtn_b64)|nd_(?:rtn_b(?:32|64)|b(?:32|64))|ppend)|b(?:vh_stack_(?:push(?:8_pop(?:1_rtn_b32|2_rtn_b64)|4_pop1_rtn_b32)|rtn_b32)|permute_(?:fi_b32|b32))|p(?:k_add_(?:rtn_(?:bf16|f16)|bf16|f16)|ermute_b32|aram_load)|d(?:ec_(?:rtn_u(?:32|64)|u(?:32|64))|irect_load)|gws_(?:sema_(?:release_all|br|p|v)|barrier|init)|or(?:_(?:rtn_b(?:32|64)|b(?:32|64))|dered_count)|inc_(?:rtn_u(?:32|64)|u(?:32|64))|xor_(?:rtn_b(?:32|64)|b(?:32|64))|nop)|s(?:_(?:buffer_(?:atomic_(?:s(?:m(?:ax(?:_x2)?|in(?:_x2)?)|wap(?:_x2)?|ub(?:_x2)?)|um(?:ax(?:_x2)?|in(?:_x2)?)|a(?:dd(?:_x2)?|nd(?:_x2)?)|cmpswap(?:_x2)?|dec(?:_x2)?|inc(?:_x2)?|xor(?:_x2)?|or(?:_x2)?)|load_(?:b(?:128|256|512|32|64|96)|dword(?:x(?:16|2|4|8))?|i(?:16|8)|u(?:16|8))|store_dword(?:x(?:2|4))?|prefetch_data)|at(?:omic_(?:s(?:m(?:ax(?:_x2)?|in(?:_x2)?)|wap(?:_x2)?|ub(?:_x2)?)|um(?:ax(?:_x2)?|in(?:_x2)?)|a(?:dd(?:_x2)?|nd(?:_x2)?)|cmpswap(?:_x2)?|dec(?:_x2)?|inc(?:_x2)?|xor(?:_x2)?|or(?:_x2)?)|c_probe(?:_buffer)?)|s(?:cratch_(?:store_dword(?:x(?:2|4))?|load_dword(?:x(?:2|4))?)|tore_dword(?:x(?:2|4))?)|load_(?:b(?:128|256|512|32|64|96)|dword(?:x(?:16|2|4|8))?|i(?:16|8)|u(?:16|8))|dcache_(?:discard(?:_x2)?|inv(?:_vol)?|wb(?:_vol)?)|prefetch_(?:data(?:_pc_rel)?|inst(?:_pc_rel)?)|g(?:et_waveid_in_workgroup|l1_inv)|mem(?:realtime|time))|cratch_(?:load_(?:d(?:16_(?:hi_(?:b16|i8|u8)|b16|i8|u8)|word(?:x(?:2|3|4))?)|s(?:byte(?:_d16(?:_hi)?)?|hort_d16(?:_hi)?|short)|lds_(?:s(?:short|byte)|u(?:short|byte)|dword)|u(?:byte(?:_d16(?:_hi)?)?|short|16|8)|b(?:lock|128|32|64|96)|i(?:16|8))|store_(?:b(?:yte(?:_d16_hi)?|1(?:28|6)|lock|32|64|96|8)|d(?:word(?:x(?:2|3|4))?|16_hi_b(?:16|8))|short(?:_d16_hi)?)))|b(?:uffer_(?:atomic_(?:m(?:ax_(?:num_f(?:32|64)|f(?:32|64)|i(?:32|64)|u(?:32|64))|in_(?:num_f(?:32|64)|f(?:32|64)|i(?:32|64)|u(?:32|64)))|s(?:ub(?:_(?:u(?:32|64)|clamp_u32|x2))?|m(?:ax(?:_x2)?|in(?:_x2)?)|wap(?:_(?:b(?:32|64)|x2))?)|a(?:dd(?:_(?:f(?:32|64)|u(?:32|64)|x2))?|nd(?:_(?:b(?:32|64)|x2))?)|c(?:mpswap(?:_(?:b(?:32|64)|f32|x2))?|sub(?:_u32)?|ond_sub_u32)|f(?:m(?:ax(?:_x2)?|in(?:_x2)?)|cmpswap(?:_x2)?)|um(?:ax(?:_x2)?|in(?:_x2)?)|dec(?:_(?:u(?:32|64)|x2))?|inc(?:_(?:u(?:32|64)|x2))?|xor(?:_(?:b(?:32|64)|x2))?|or(?:_(?:b(?:32|64)|x2))?|pk_add_(?:bf16|f16))|load_(?:d(?:16_(?:format_x(?:y(?:z(?:w)?)?)?|hi_(?:format_x|b16|i8|u8)|b16|i8|u8)|word(?:x(?:2|3|4))?)|format_(?:d16_(?:x(?:y(?:z(?:w)?)?)?|hi_x)|x(?:y(?:z(?:w)?)?)?)|s(?:byte(?:_d16(?:_hi)?)?|hort_d16(?:_hi)?|short)|u(?:byte(?:_d16(?:_hi)?)?|short|16|8)|b(?:128|32|64|96)|i(?:16|8))|store_(?:d(?:16_(?:format_x(?:y(?:z(?:w)?)?)?|hi_(?:b(?:16|8)|format_x))|word(?:x(?:2|3|4))?)|format_(?:d16_(?:x(?:y(?:z(?:w)?)?)?|hi_x)|x(?:y(?:z(?:w)?)?)?)|b(?:yte(?:_d16_hi)?|1(?:28|6)|32|64|96|8)|short(?:_d16_hi)?|lds_dword)|wb(?:invl1(?:_vol)?|l2)|gl(?:0_inv|1_inv)|inv(?:l2)?)|vh(?:_(?:dual_intersect_ray|intersect_ray)|64_intersect_ray|8_intersect_ray))|global_(?:atomic_(?:m(?:ax_(?:num_f(?:32|64)|f(?:32|64)|i(?:32|64)|u(?:32|64))|in_(?:num_f(?:32|64)|f(?:32|64)|i(?:32|64)|u(?:32|64)))|s(?:ub(?:_(?:u(?:32|64)|clamp_u32|x2))?|m(?:ax(?:_x2)?|in(?:_x2)?)|wap(?:_(?:b(?:32|64)|x2))?)|a(?:dd(?:_(?:f(?:32|64)|u(?:32|64)|x2))?|nd(?:_(?:b(?:32|64)|x2))?)|c(?:mpswap(?:_(?:b(?:32|64)|f32|x2))?|sub(?:_u32)?|ond_sub_u32)|f(?:m(?:ax(?:_x2)?|in(?:_x2)?)|cmpswap(?:_x2)?)|or(?:(?:_(?:b(?:32|64)|x2)|dered_add_b64))?|um(?:ax(?:_x2)?|in(?:_x2)?)|dec(?:_(?:u(?:32|64)|x2))?|inc(?:_(?:u(?:32|64)|x2))?|xor(?:_(?:b(?:32|64)|x2))?|pk_add_(?:bf16|f16))|load_(?:d(?:16_(?:hi_(?:b16|i8|u8)|b16|i8|u8)|word(?:(?:x(?:2|3|4)|_addtid))?)|lds_(?:dword(?:x(?:3|4))?|s(?:short|byte)|u(?:short|byte))|b(?:128(?:_tr_b(?:16|6))?|64(?:_tr_b(?:4|8))?|lock|32|96)|s(?:byte(?:_d16(?:_hi)?)?|hort_d16(?:_hi)?|short)|tr(?:_b(?:128|64)|16_b128|4_b64|6_b96|8_b64)|a(?:sync_to_lds_b(?:128|32|64|8)|ddtid_b32)|u(?:byte(?:_d16(?:_hi)?)?|short|16|8)|monitor_b(?:128|32|64)|i(?:16|8))|store_(?:d(?:word(?:(?:x(?:2|3|4)|_addtid))?|16_hi_b(?:16|8))|b(?:yte(?:_d16_hi)?|1(?:28|6)|lock|32|64|96|8)|a(?:sync_from_lds_b(?:128|32|64|8)|ddtid_b32)|short(?:_d16_hi)?)|prefetch_b8|wb(?:inv)?|inv)|image_(?:s(?:ample(?:_(?:c(?:(?:_(?:c(?:d(?:_(?:cl(?:_(?:o(?:_g16)?|g16))?|o(?:_g16)?|g16))?|l(?:_o)?)|d(?:_(?:cl(?:_(?:o(?:_g16)?|g16))?|o(?:_g16)?|g16))?|b(?:_(?:cl(?:_o)?|o))?|l(?:(?:z(?:_o)?|_o))?|o)|d(?:_(?:cl(?:_(?:o(?:_g16)?|g16))?|o(?:_g16)?|g16))?|l(?:_o)?))?|d(?:_(?:cl(?:_(?:o(?:_g16)?|g16))?|o(?:_g16)?|g16))?|b(?:_(?:cl(?:_o)?|o))?|l(?:(?:z(?:_o)?|_o))?|o))?|tore(?:_(?:mip(?:_(?:pck(?:(?:2|4))?|by(?:2|4)))?|pck(?:(?:2|4))?|by(?:2|4)))?)|atomic_(?:m(?:ax_(?:num_flt|uint|flt|int)|in_(?:num_flt|uint|flt|int))|s(?:ub(?:_uint)?|m(?:ax|in)|wap)|a(?:dd(?:_(?:uint|flt))?|nd)|f(?:m(?:ax|in)|cmpswap)|pk_add_(?:bf16|f16)|dec(?:_uint)?|inc(?:_uint)?|um(?:ax|in)|cmpswap|xor|or)|g(?:ather(?:4(?:(?:_(?:c(?:(?:_(?:b(?:_(?:cl(?:_o)?|o))?|l(?:(?:z(?:_o)?|_o))?|cl(?:_o)?|o)|l(?:_o)?))?|b(?:_(?:cl(?:_o)?|o))?|l(?:(?:z(?:_o)?|_o))?|o)|h(?:_pck)?))?|8h_pck)|et_(?:resinfo|lod))|load(?:_(?:mip(?:_(?:pck(?:(?:_sgn|2|4))?|by(?:2|4)))?|pck(?:(?:_sgn|2|4))?|by(?:2|4)))?|bvh(?:_(?:dual_intersect_ray|intersect_ray)|64_intersect_ray|8_intersect_ray)|msaa_load)|flat_(?:atomic_(?:m(?:ax_(?:num_f(?:32|64)|f(?:32|64)|i(?:32|64)|u(?:32|64))|in_(?:num_f(?:32|64)|f(?:32|64)|i(?:32|64)|u(?:32|64)))|s(?:ub(?:_(?:u(?:32|64)|clamp_u32|x2))?|m(?:ax(?:_x2)?|in(?:_x2)?)|wap(?:_(?:b(?:32|64)|x2))?)|a(?:dd(?:_(?:f(?:32|64)|u(?:32|64)|x2))?|nd(?:_(?:b(?:32|64)|x2))?)|c(?:mpswap(?:_(?:b(?:32|64)|f32|x2))?|ond_sub_u32|sub_u32)|f(?:m(?:ax(?:_x2)?|in(?:_x2)?)|cmpswap(?:_x2)?)|um(?:ax(?:_x2)?|in(?:_x2)?)|dec(?:_(?:u(?:32|64)|x2))?|inc(?:_(?:u(?:32|64)|x2))?|xor(?:_(?:b(?:32|64)|x2))?|or(?:_(?:b(?:32|64)|x2))?|pk_add_(?:bf16|f16))|load_(?:d(?:16_(?:hi_(?:b16|i8|u8)|b16|i8|u8)|word(?:x(?:2|3|4))?)|s(?:byte(?:_d16(?:_hi)?)?|hort_d16(?:_hi)?|short)|u(?:byte(?:_d16(?:_hi)?)?|short|16|8)|monitor_b(?:128|32|64)|b(?:128|32|64|96)|i(?:16|8))|store_(?:b(?:yte(?:_d16_hi)?|1(?:28|6)|32|64|96|8)|d(?:word(?:x(?:2|3|4))?|16_hi_b(?:16|8))|short(?:_d16_hi)?)|prefetch_b8)|t(?:buffer_(?:store_(?:format_(?:d16_x(?:y(?:z(?:w)?)?)?|x(?:y(?:z(?:w)?)?)?)|d16_format_x(?:y(?:z(?:w)?)?)?)|load_(?:format_(?:d16_x(?:y(?:z(?:w)?)?)?|x(?:y(?:z(?:w)?)?)?)|d16_format_x(?:y(?:z(?:w)?)?)?))|ensor_(?:store_from_lds|load_to_lds))|cluster_load_(?:async_to_lds_b(?:128|32|64|8)|b(?:128|32|64))|exp(?:ort)?))(?:_(?:e32|e64|dpp|sdwa))?(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "keyword.operator.scalar.instruction.gcn-asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])(?:s_(?:c(?:m(?:p(?:_(?:n(?:l(?:e_f(?:16|32)|g_f(?:16|32)|t_f(?:16|32))|g(?:e_f(?:16|32)|t_f(?:16|32))|eq_f(?:16|32))|l(?:g_(?:f(?:16|32)|u(?:32|64)|i32)|e_(?:f(?:16|32)|i32|u32)|t_(?:f(?:16|32)|i32|u32))|g(?:e_(?:f(?:16|32)|i32|u32)|t_(?:f(?:16|32)|i32|u32))|eq_(?:f(?:16|32)|u(?:32|64)|i32)|o_f(?:16|32)|u_f(?:16|32))|k_(?:l(?:e_(?:i32|u32)|g_(?:i32|u32)|t_(?:i32|u32))|g(?:e_(?:i32|u32)|t_(?:i32|u32))|eq_(?:i32|u32)))|ov(?:_b(?:32|64)|k_i32))|vt_(?:f(?:32_(?:f16|i32|u32)|16_f32)|pk_rtz_f16_f32|hi_f32_f16|i32_f32|u32_f32)|l(?:z_i32_u(?:32|64)|s_i32(?:_i64)?)|select_b(?:32|64)|tz_i32_b(?:32|64)|eil_f(?:16|32))|a(?:nd(?:_(?:not(?:1_(?:saveexec_b(?:32|64)|wrexec_b(?:32|64)|b(?:32|64))|0_(?:saveexec_b(?:32|64)|wrexec_b(?:32|64)))|saveexec_b(?:32|64)|b(?:32|64))|n(?:2_(?:saveexec_b(?:32|64)|wrexec_b(?:32|64)|b(?:32|64))|1_(?:saveexec_b(?:32|64)|wrexec_b(?:32|64))))|dd(?:_(?:co_(?:ci_u32|i32|u32)|f(?:16|32)|u(?:32|64)|nc_u64|i32)|k_(?:co_i32|i32)|c_u32)|bs(?:diff_i32|_i32)|shr_i(?:32|64)|lloc_vgpr)|m(?:ov(?:rel(?:s(?:_b(?:32|64)|d_2_b32)|d_b(?:32|64))|_b(?:32|64)|k_i32)|ax(?:_(?:num_f(?:16|32)|f(?:16|32)|i32|u32)|imum_f(?:16|32))|in(?:_(?:num_f(?:16|32)|f(?:16|32)|i32|u32)|imum_f(?:16|32))|ul(?:_(?:hi_(?:i32|u32)|f(?:16|32)|i32|u64)|k_i32))|b(?:it(?:cmp(?:0_b(?:32|64)|1_b(?:32|64))|set(?:0_b(?:32|64)|1_b(?:32|64))|replicate_b64_b32)|arrier(?:_(?:signal(?:_isfirst)?|leave|init))?|f(?:e_(?:i(?:32|64)|u(?:32|64))|m_b(?:32|64))|cnt(?:0_i32_b(?:32|64)|1_i32_b(?:32|64))|rev_b(?:32|64))|s(?:e(?:t(?:_(?:gpr_idx_(?:o(?:ff|n)|mode|idx)|valu_coexec_mode)|reg_(?:imm32_b32|b32))|ndmsg(?:(?:_rtn_b(?:32|64)|halt))?|xt_i32_i(?:16|8))|ub(?:_(?:co_(?:ci_u32|i32|u32)|f(?:16|32)|u(?:32|64)|nc_u64|i32)|b_u32)|leep_var)|or(?:_(?:not(?:1_(?:saveexec_b(?:32|64)|b(?:32|64))|0_saveexec_b(?:32|64))|saveexec_b(?:32|64)|b(?:32|64))|n(?:2_(?:saveexec_b(?:32|64)|b(?:32|64))|1_saveexec_b(?:32|64)))|f(?:l(?:bit_i32(?:_(?:b(?:32|64)|i64))?|oor_f(?:16|32))|f(?:0_i32_b(?:32|64)|1_i32_b(?:32|64))|ma(?:c_f(?:16|32)|ak_f32|mk_f32))|n(?:o(?:r_(?:saveexec_b(?:32|64)|b(?:32|64))|t_b(?:32|64))|and_(?:saveexec_b(?:32|64)|b(?:32|64)))|x(?:nor_(?:saveexec_b(?:32|64)|b(?:32|64))|or_(?:saveexec_b(?:32|64)|b(?:32|64)))|lsh(?:l(?:_b(?:32|64)|1_add_u32|2_add_u32|3_add_u32|4_add_u32)|r_b(?:32|64))|get(?:_(?:shader_cycles_u64|barrier_state|pc_i64)|reg_b32|pc_b64)|pack_(?:h(?:h_b32_b16|l_b32_b16)|l(?:h_b32_b16|l_b32_b16))|r(?:ndne_f(?:16|32)|ound_mode)|t(?:runc_f(?:16|32)|tracedata)|de(?:cperflevel|norm_mode)|i(?:ncperflevel|cache_inv)|w(?:qm_b(?:32|64)|akeup)|quadmask_b(?:32|64)))(?:_(?:e32|e64|dpp|sdwa))?(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "support.function.vector.instruction.gcn-asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])(?:(?:v_(?:c(?:vt_(?:s(?:cale(?:f32_(?:pk(?:_(?:f(?:p(?:4_(?:f(?:16|32)|bf16)|8_(?:f(?:16|32)|bf16))|16_(?:fp(?:4|8)|bf8)|32_(?:fp(?:4|8)|bf8))|bf(?:8_(?:f(?:16|32)|bf16)|16_(?:fp(?:4|8)|bf8)))|32_(?:f(?:p6_(?:bf16|f16)|16_(?:bf6|fp6)|32_(?:bf6|fp6))|bf(?:16_(?:bf6|fp6)|6_(?:bf16|f16)))|8_(?:fp(?:4_(?:f(?:16|32)|bf16)|8_(?:f(?:16|32)|bf16))|bf8_(?:f(?:16|32)|bf16))|16_(?:bf6_(?:f(?:16|32)|bf16)|fp6_(?:f(?:16|32)|bf16)))|sr_(?:pk(?:8_(?:fp(?:4_(?:f(?:16|32)|bf16)|8_(?:f(?:16|32)|bf16))|bf8_(?:f(?:16|32)|bf16))|16_(?:bf6_(?:f(?:16|32)|bf16)|fp6_(?:f(?:16|32)|bf16))|32_(?:bf6_(?:f(?:16|32)|bf16)|fp6_(?:f(?:16|32)|bf16))|_fp4_(?:f(?:16|32)|bf16))|bf8_(?:f(?:16|32)|bf16)|fp8_(?:f(?:16|32)|bf16))|f(?:16_(?:bf8|fp8)|32_(?:bf8|fp8))|2xpk16_(?:bf6_f32|fp6_f32))|_(?:pk(?:_(?:f(?:p(?:4_(?:f(?:16|32)|bf16)|6_(?:f(?:16|32)|bf16)|8_(?:f(?:16|32)|bf16))|16_(?:fp(?:4|6|8)|bf(?:6|8))|32_(?:fp(?:4|6|8)|bf(?:6|8)))|bf(?:16_(?:fp(?:4|6|8)|bf(?:6|8))|6_(?:f(?:16|32)|bf16)|8_(?:f(?:16|32)|bf16)))|8_(?:f(?:16_(?:fp(?:4|8)|bf8)|32_(?:fp(?:4|8)|bf8))|bf16_(?:fp(?:4|8)|bf8))|16_(?:f(?:16_(?:bf6|fp6)|32_(?:bf6|fp6))|bf16_(?:bf6|fp6)))|sr_(?:pk_(?:fp(?:4_(?:f(?:16|32)|bf16)|6_(?:f(?:16|32)|bf16))|bf6_(?:f(?:16|32)|bf16))|bf8_(?:f(?:16|32)|bf16)|fp8_(?:f(?:16|32)|bf16))|f(?:16_(?:bf8|fp8)|32_(?:bf8|fp8))))|r_(?:bf(?:8_f(?:16|32)|16_f32)|f(?:p8_f(?:16|32)|16_f32)|pk_(?:bf16_f32|f16_f32)))|pk(?:_(?:f(?:16_(?:f(?:32|p8)|bf8)|32_(?:bf8|fp8)|p8_f(?:16|32))|norm_(?:i16_f(?:16|32)|u16_f(?:16|32))|bf(?:8_f(?:16|32)|16_f32)|u(?:16_(?:f32|u32)|8_f32)|i16_(?:f32|i32)|rtz_f16_f32)|norm_(?:i16_f(?:16|32)|u16_f(?:16|32))|accum_u8_f32|rtz_f16_f32)|f(?:32_(?:u(?:byte(?:0|1|2|3)|32)|f(?:16|64|p8)|bf(?:16|8)|i32)|16_(?:f(?:32|p8)|bf8|i16|u16)|l(?:oor_i32_f32|r_i32_f32)|64_(?:f32|i32|u32))|n(?:orm_(?:i16_f16|u16_f16)|earest_i32_f32)|i(?:32_(?:f(?:32|64)|i16)|16_f16)|u(?:32_(?:f(?:32|64)|u16)|16_f16)|rpi_i32_f32|off_f32_i4)|mp(?:x_(?:n(?:e(?:_(?:i(?:16|32|64)|u(?:16|32|64))|q_f(?:16|32|64))|l(?:e_f(?:16|32|64)|g_f(?:16|32|64)|t_f(?:16|32|64))|g(?:e_f(?:16|32|64)|t_f(?:16|32|64)))|l(?:e_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|t_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|g_f(?:16|32|64))|g(?:e_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|t_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64)))|t(?:_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|ru_(?:f(?:16|32|64)|i(?:32|64)|u(?:32|64)))|eq_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|f_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|class_f(?:16|32|64)|o_f(?:16|32|64)|u_f(?:16|32|64))|_(?:n(?:e(?:_(?:i(?:16|32|64)|u(?:16|32|64))|q_f(?:16|32|64))|l(?:e_f(?:16|32|64)|g_f(?:16|32|64)|t_f(?:16|32|64))|g(?:e_f(?:16|32|64)|t_f(?:16|32|64)))|l(?:e_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|t_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|g_f(?:16|32|64))|g(?:e_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|t_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64)))|t(?:_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|ru_(?:f(?:16|32|64)|i(?:32|64)|u(?:32|64)))|eq_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|f_(?:f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|class_f(?:16|32|64)|o_f(?:16|32|64)|u_f(?:16|32|64)))|ube(?:id_f32|ma_f32|sc_f32|tc_f32)|l(?:z_i32_u32|rexcp|s_i32)|os_(?:f(?:16|32)|bf16)|eil_f(?:16|32|64)|ndmask_b(?:16|32)|tz_i32_b32)|m(?:a(?:x(?:_(?:num_f(?:16|32|64)|f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|imum(?:minimum_f(?:16|32)|_f(?:16|32|64)|3_f(?:16|32))|3_(?:num_f(?:16|32)|f(?:16|32)|i(?:16|32)|u(?:16|32))|min_(?:num_f(?:16|32)|f(?:16|32)|i32|u32))|d(?:_(?:u(?:32(?:_u(?:16|24))?|64_u32|16)|legacy_(?:f(?:16|32)|i16|u16)|i(?:32_i(?:16|24)|64_i32|16)|mix(?:hi_f16|lo_f16|_f32)|co_(?:i64_i32|u64_u32)|nc_(?:i64_i32|u64_u32)|f(?:16|32))|ak_f(?:16|32)|mk_f(?:16|32))|c_(?:f(?:16|32)|legacy_f32))|in(?:_(?:num_f(?:16|32|64)|f(?:16|32|64)|i(?:16|32|64)|u(?:16|32|64))|imum(?:maximum_f(?:16|32)|_f(?:16|32|64)|3_f(?:16|32))|3_(?:num_f(?:16|32)|f(?:16|32)|i(?:16|32)|u(?:16|32))|max_(?:num_f(?:16|32)|f(?:16|32)|i32|u32))|ul(?:_(?:hi_(?:i32(?:_i24)?|u32(?:_u24)?)|l(?:o_u(?:16|32)|egacy_f32)|u(?:32_u24|64)|f(?:16|32|64)|dx9_zero_f32|i32_i24)|lit_f32)|ov(?:rel(?:s(?:d_(?:2_b32|b32)|_b32)|d_b32)|_b(?:16|32|64))|ed3_(?:num_f(?:16|32)|f(?:16|32)|i(?:16|32)|u(?:16|32))|bcnt_(?:hi_u32_b32|lo_u32_b32)|qsad_(?:pk_u16_u8|u32_u8)|sad_u8)|d(?:ual_(?:m(?:ul_(?:dx9_zero_f32|f(?:32|64))|ax_(?:num_f(?:32|64)|f32|i32)|in_(?:num_f(?:32|64)|f32|i32)|ov_b32)|a(?:dd_(?:f(?:32|64)|nc_u32)|shrrev_i32|nd_b32)|fma(?:_f(?:32|64)|ak_f32|mk_f32|c_f32)|sub(?:_(?:nc_u32|f32)|rev_f32)|dot2acc_f32_(?:bf16|f16)|lsh(?:lrev_b32|rrev_b32)|cndmask_b32|bitop2_b32)|ot(?:2(?:_(?:f(?:32_(?:bf16|f16)|16_f16)|bf16_bf16|i32_i16|u32_u16)|c_(?:f32_(?:bf16|f16)|i32_i16)|acc_f32_f16)|4(?:_(?:f32_(?:bf8_(?:bf8|fp8)|fp8_(?:bf8|fp8))|i32_i(?:u8|8)|u32_u8)|c_i32_i8)|8(?:_(?:i32_i(?:u4|4)|u32_u4)|c_i32_i4))|iv_(?:f(?:ixup_(?:f(?:16|32|64)|legacy_f16)|mas_f(?:32|64))|scale_f(?:32|64)))|p(?:k_(?:m(?:a(?:x(?:_(?:num_(?:bf16|f16)|f16|i16|u16)|3_(?:num_f16|i16|u16)|imum(?:3_f16|_f16))|d_(?:i16|u16))|in(?:_(?:num_(?:bf16|f16)|f16|i16|u16)|3_(?:num_f16|i16|u16)|imum(?:3_f16|_f16))|ul_(?:f(?:16|32)|lo_u16|bf16)|ov_b32)|a(?:dd_(?:m(?:ax_(?:i16|u16)|in_(?:i16|u16))|f(?:16|32)|bf16|i16|u16)|shrrev_i16)|fma(?:_(?:f(?:16|32)|bf16)|c_f16)|lsh(?:lrev_b16|rrev_b16)|sub_(?:i16|u16))|erm(?:lane(?:_(?:idx_gen_b32|bcast_b32|down_b32|xor_b32|up_b32)|16_(?:swap_b32|var_b32|b32)|x16_(?:var_b32|b32)|32_swap_b32|64_b32)|_(?:pk16_b(?:4_u4|6_u4|8_u4)|b32))|ack_b32_f16|ipeflush|rng_b32)|s(?:ub(?:_(?:nc_(?:u(?:16|32|64)|i(?:16|32))|co_(?:ci_u32|u32)|f(?:16|32)|i(?:16|32)|u(?:16|32))|rev_(?:co_(?:ci_u32|u32)|f(?:16|32)|u(?:16|32)|nc_u32)|b(?:rev_co_u32|_co_u32))|_(?:r(?:cp_f(?:16|32)|sq_f(?:16|32))|sqrt_f(?:16|32)|exp_f(?:16|32)|log_f(?:16|32))|a(?:t_pk(?:4_(?:i4_i8|u4_u8)|_u8_i16)|d_(?:u(?:16|32|8)|hi_u8))|qrt_(?:f(?:16|32|64)|bf16)|wap(?:_b(?:16|32)|rel_b32)|creen_partition_4se_b32|in_(?:f(?:16|32)|bf16))|f(?:ma(?:_(?:mix(?:_f32(?:_(?:bf16|f16))?|hi_(?:bf16|f16)|lo_(?:bf16|f16))|legacy_f(?:16|32)|f(?:16|32|64)|dx9_zero_f32)|c_(?:f(?:16|32|64)|dx9_zero_f32|legacy_f32)|ak_f(?:16|32|64)|mk_f(?:16|32|64))|r(?:exp_(?:exp_i(?:32_f(?:32|64)|16_f16)|mant_f(?:16|32|64))|act_f(?:16|32|64))|fb(?:h_(?:i32|u32)|l_b32)|loor_f(?:16|32|64))|a(?:dd(?:_(?:m(?:ax_(?:i32|u32)|in_(?:i32|u32))|nc_(?:u(?:16|32|64)|i(?:16|32))|co_(?:ci_u32|u32)|f(?:16|32|64)|i(?:16|32)|u(?:16|32)|lshl_u32)|3_(?:nc_u32|u32)|c_co_u32)|ccvgpr_(?:write(?:_b32)?|read(?:_b32)?|mov_b32)|shr(?:_pk_(?:i8_i32|u8_i32)|rev_i(?:16|32|64))|nd_(?:b(?:16|32)|or_b32)|lignb(?:yte_b32|it_b32))|interp_(?:p(?:1(?:0_(?:f(?:16_f32|32)|rtz_f16_f32)|l(?:l_f16|v_f16)|_f32)|2_(?:f(?:16(?:_f32)?|32)|rtz_f16_f32|legacy_f16|new_f32))|mov_f32)|l(?:sh(?:l(?:_(?:add_u(?:32|64)|or_b32)|rev_b(?:16|32|64))|rrev_b(?:16|32|64))|og_(?:f(?:16|32)|bf16)|dexp_f(?:16|32|64)|erp_u8)|r(?:cp_(?:f(?:16|32|64)|iflag_f32|bf16)|ead(?:firstlane_b32|lane_b32)|sq_(?:f(?:16|32|64)|bf16)|ndne_f(?:16|32|64))|b(?:f(?:e_(?:i32|u32)|rev_b32|i_b32|m_b32)|itop3_b(?:16|32)|cnt_u32_b32)|t(?:r(?:unc_f(?:16|32|64)|ig_preop_f64)|anh_(?:f(?:16|32)|bf16))|x(?:or(?:_(?:b(?:16|32)|add_u32)|3_b32)|nor_b32|ad_u32)|exp_(?:f(?:16|32)|bf16)|or(?:_b(?:16|32)|3_b32)|no(?:t_b(?:16|32)|p)|qsad_pk_u16_u8|writelane_b32)|lds_(?:direct_load|param_load)))(?:_(?:e32|e64|dpp|sdwa))?(?![A-Za-z0-9_.$])"
+        }
+      ]
+    },
+    "modifiers": {
+      "patterns": [
+        {
+          "name": "support.type.waitcnt.gcn-asm",
+          "match": "(?i)\\b(?:vmcnt|lgkmcnt|expcnt|vscnt|loadcnt|storecnt|samplecnt|bvhcnt|dscnt|kmcnt)\\s*\\([^)]*\\)"
+        },
+        {
+          "name": "entity.other.attribute-name.modifier.gcn-asm",
+          "match": "(?i)\\b(?:offset0?|offset1|omod|dmask|dim|row_mask|bank_mask|bound_ctrl|fi|quad_perm|row_shr|row_shl|row_ror|row_bcast|dst_sel|dst_unused|src0_sel|src1_sel|op_sel|op_sel_hi|neg_lo|neg_hi|cbsz|abid|blgp|th|scope|format|dfmt|nfmt|hwreg|sendmsg)\\s*:"
+        },
+        {
+          "name": "storage.modifier.gcn-asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])(?:glc|slc|dlc|sc0|sc1|nt|clamp|abs|neg|unorm|da|r128|a16|d16|lwe|tfe|idxen|offen|lds|gds|high|shared|mul:2|mul:4|div:2)(?![A-Za-z0-9_.$])"
+        }
+      ]
+    },
+    "registers": {
+      "patterns": [
+        {
+          "name": "variable.other.register.vector.range.gcn-asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])[va]\\s*\\[[^\\]]+\\]"
+        },
+        {
+          "name": "variable.other.register.scalar.range.gcn-asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])(?:s|ttmp)\\s*\\[[^\\]]+\\]"
+        },
+        {
+          "name": "variable.other.register.vector.gcn-asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])v(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "variable.other.register.acc.gcn-asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])a(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "variable.other.register.scalar.gcn-asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])s(?:10[0-5]|[1-9]\\d|\\d)(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "variable.other.register.ttmp.gcn-asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])ttmp(?:1[0-5]|\\d)(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "variable.language.register.special.gcn-asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])(?:vcc|vcc_lo|vcc_hi|exec|exec_lo|exec_hi|scc|m0|null|off|flat_scratch|flat_scratch_lo|flat_scratch_hi|xnack_mask|xnack_mask_lo|xnack_mask_hi|tba|tba_lo|tba_hi|tma|tma_lo|tma_hi|src_scc|src_execz|src_vccz|src_lds_direct|src_shared_base|src_private_base|src_pops_exiting_wave_id|lds_direct|shared_base|shared_limit|private_base|private_limit)(?![A-Za-z0-9_.$])"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.gcn-asm",
+          "match": "(?<![A-Za-z0-9_.$])-?0[xX][0-9a-fA-F]+(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "constant.numeric.binary.gcn-asm",
+          "match": "(?<![A-Za-z0-9_.$])-?0[bB][01]+(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "constant.numeric.float.gcn-asm",
+          "match": "(?<![A-Za-z0-9_.$])-?\\d+\\.\\d+(?:[eE][+-]?\\d+)?(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "constant.numeric.decimal.gcn-asm",
+          "match": "(?<![A-Za-z0-9_.$])-?\\d+(?![A-Za-z0-9_.$])"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.gcn-asm",
+          "match": "[+\\-*/%&|^~!<>=,]+"
+        }
+      ]
+    }
+  }
+}
