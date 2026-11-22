@@ -10,7 +10,7 @@ jobs:
     name: Publish to VS Marketplace
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
 
     steps:
@@ -29,5 +29,20 @@ jobs:
       - name: Compile and run tests
         run: npm test
 
+      - name: Package VSIX
+        run: npx @vscode/vsce package
+
+      - name: Upload VSIX as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsix-package
+          path: "*.vsix"
+
       - name: Publish to Visual Studio Marketplace
-        run: npx @vscode/vsce publish --oidc
+        run: npx @vscode/vsce publish --oidc --packagePath *.vsix
+
+      - name: Upload VSIX to GitHub Release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.event.release.tag_name }}" *.vsix --clobber
