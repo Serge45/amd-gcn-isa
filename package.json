@@ -3,7 +3,7 @@
   "displayName": "AMDGPU ISA Language Support",
   "description": "Syntax highlighting, ISA instruction hover documentation, and go-to-definition for AMD GCN/CDNA/RDNA assembly (.s, .S, .gcn).",
   "version": "0.1.0",
-  "publisher": "amd-gcn-isa",
+  "publisher": "serge45-md-draw",
   "license": "MIT",
   "engines": {
     "vscode": "^1.85.0"
