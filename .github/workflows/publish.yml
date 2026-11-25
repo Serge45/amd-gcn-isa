@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish:
-    name: Publish to VS Marketplace
+    name: Publish Extension
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -40,6 +40,11 @@ jobs:
 
       - name: Publish to Visual Studio Marketplace
         run: npx @vscode/vsce publish --oidc --packagePath *.vsix
+
+      - name: Publish to Open VSX Registry
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: npx ovsx publish *.vsix
 
       - name: Upload VSIX to GitHub Release
         if: github.event_name == 'release'
