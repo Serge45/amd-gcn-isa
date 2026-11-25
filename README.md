@@ -1,7 +1,9 @@
 # AMDGPU ISA Language Support
 
 [![VS Code Marketplace](https://vsmarketplacebadges.dev/version-short/serge45-md-draw.amdgpu-isa-support.svg)](https://marketplace.visualstudio.com/items?itemName=serge45-md-draw.amdgpu-isa-support)
+[![VS Code Marketplace Downloads](https://vsmarketplacebadges.dev/downloads-short/serge45-md-draw.amdgpu-isa-support.svg)](https://marketplace.visualstudio.com/items?itemName=serge45-md-draw.amdgpu-isa-support)
 [![Open VSX](https://img.shields.io/open-vsx/v/serge45-md-draw/amdgpu-isa-support?label=Open%20VSX)](https://open-vsx.org/extension/serge45-md-draw/amdgpu-isa-support)
+[![Open VSX Downloads](https://img.shields.io/open-vsx/dt/serge45-md-draw/amdgpu-isa-support?label=Open%20VSX%20Downloads)](https://open-vsx.org/extension/serge45-md-draw/amdgpu-isa-support)
 
 VS Code language support for AMD GPU assembly files (`.s`, `.S`, `.gcn`), driven directly by the official AMD GPU ISA XML specifications across **CDNA 1–5** and **RDNA 1–4 (including RDNA 3.5)**.
 
