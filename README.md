@@ -20,6 +20,8 @@ VS Code language support for AMD GPU assembly files (`.s`, `.S`, `.gcn`), driven
 - **Go-to-Definition (`Ctrl + Click` / `F12`)**:
   - **Labels**: Jump from branch targets (e.g., `s_branch .L_loop`, `s_cbranch_scc0 target`) to label definitions (`.L_loop:`, `target:`).
   - **SGPR/VGPR/AGPR Aliases**: Jump from any alias identifier (including inside register ranges like `s[base:base+3]`, `v[my_vreg]`, `a[acc_reg]`) to its definition via `.set`, `.equ`, `.equiv`, `=`, or `#define`. Handles redefinitions by preferring the nearest preceding definition.
+- **Debugger Breakpoints**:
+  - Enables setting breakpoints directly in the editor gutter on `.s`, `.S`, and `.gcn` assembly source files (for use with AMDGPU debuggers such as `rocgdb` when assembled with DWARF `-g`).
 
 ## Development
 
